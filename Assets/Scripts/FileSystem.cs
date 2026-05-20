@@ -1,19 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// FileSystem.cs — All readable files and their content.
-/// Adding a new file = new case in Read() and optionally Analyze().
-/// </summary>
 public class FileSystem : MonoBehaviour
 {
-    [HideInInspector] public GameState  State;
-    [HideInInspector] public Terminal   Term;
+    [HideInInspector] public GameState State;
+    [HideInInspector] public Terminal Term;
     [HideInInspector] public NodeSystem Nodes;
 
-    // =================================================================
+    
     //  READ
-    // =================================================================
+    
     public IEnumerator Read(string file)
     {
         if (State.ActiveNode.Length == 0)
@@ -21,7 +17,7 @@ public class FileSystem : MonoBehaviour
 
         string f = Normalise(file);
 
-        // ── HUB_03 ────────────────────────────────────────────────────
+        //  HUB_03
         if (f == "staffchat" && State.ActiveNode == "hub03")
         {
             State.Read_StaffChat = true;
@@ -52,7 +48,7 @@ public class FileSystem : MonoBehaviour
             yield return Term.TypeLine(Term.D("tip: [analyze access_log] to flag anomalies."));
         }
 
-        // ── ARCHIVE_07 ────────────────────────────────────────────────
+        // ARCHIVE_07 
         else if (f == "echolist" && State.ActiveNode == "archive07")
         {
             yield return Term.TypeLine(Term.D("// echo_list ───────────────────────────────"));
@@ -112,7 +108,7 @@ public class FileSystem : MonoBehaviour
             }
         }
 
-        // ── DEEP_12 ───────────────────────────────────────────────────
+        // DEEP_12 
         else if (f == "directive" && State.ActiveNode == "deep12")
         {
             State.Read_Directive = true;
@@ -141,7 +137,7 @@ public class FileSystem : MonoBehaviour
             else yield return Term.TypeLine(Term.D("key already obtained. CORE_19 is unlocked."));
         }
 
-        // ── CORE_19 ───────────────────────────────────────────────────
+        // CORE_19
         else if (f == "directorlog" && State.ActiveNode == "core19")
         {
             State.Read_DirectorLog = true;
@@ -165,9 +161,9 @@ public class FileSystem : MonoBehaviour
         }
     }
 
-    // =================================================================
+    
     //  ANALYZE
-    // =================================================================
+    
     public IEnumerator Analyze(string file)
     {
         string f = Normalise(file);

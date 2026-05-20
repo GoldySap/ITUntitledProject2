@@ -5,19 +5,18 @@ using UnityEngine;
 
 public class PuzzleSystem : MonoBehaviour
 {
-    [HideInInspector] public GameState  State;
-    [HideInInspector] public Terminal   Term;
+    [HideInInspector] public GameState State;
+    [HideInInspector] public Terminal Term;
     [HideInInspector] public NodeSystem Nodes;
 
-    // Encoded strings for each cipher puzzle
     // All use caesar with the shift value hidden in lore files
     // payload_047 shift=7:  "KILL ORDERS READY" -> encoded
     // echo_orders shift=12: "FORCE AUTH SIGNED" -> encoded
     // echo_master shift=12: "VANE SIGNED ALL"   -> encoded
-    private const string ENC_PAYLOAD  = "RPSS VYKLYZ YLHKF"; // shift 7  -> KILL ORDERS READY
-    private const string ENC_ORDERS   = "RUBAC MDFZ UECBSR"; // shift 12 -> FORCE AUTH SIGNED
-    private const string ENC_MASTER   = "HMZQ EUASTQ MXX";   // shift 12 -> VANE SIGNED ALL
-
+    private const string ENC_PAYLOAD = "RPSS VYKLYZ YLHKF"; // shift 7 -> KILL ORDERS READY
+    private const string ENC_ORDERS = "RUBAC MDFZ UECBSR"; // shift 12 -> FORCE AUTH SIGNED
+    private const string ENC_MASTER = "HMZQ EUASTQ MXX"; // shift 12 -> VANE SIGNED ALL
+    
     public IEnumerator Decrypter(string args)
     {
         if (args.Length == 0)
@@ -36,7 +35,7 @@ public class PuzzleSystem : MonoBehaviour
             yield break;
         }
 
-        int    shift   = int.Parse(match.Groups[1].Value);
+        int shift = int.Parse(match.Groups[1].Value);
         string encoded = match.Groups[2].Value.Trim().ToUpper();
         string decoded = CaesarDecrypt(encoded, shift);
 
@@ -49,26 +48,26 @@ public class PuzzleSystem : MonoBehaviour
         bool matched = false;
         if (State.ActiveNode == "archive07" && !State.Ev3_Payload047 && IsValidPlaintext(decoded))
         {
-            State.PendingCipherFile   = "payload_047";
+            State.PendingCipherFile = "payload_047";
             State.PendingCipherOutput = decoded;
-            State.PendingConfirm      = true;
-            State.CipherFirstTry      = true;
+            State.PendingConfirm = true;
+            State.CipherFirstTry = true;
             matched = true;
         }
         else if (State.ActiveNode == "deep12" && !State.Ev4_EchoOrders && IsValidPlaintext(decoded))
         {
-            State.PendingCipherFile   = "echo_orders";
+            State.PendingCipherFile = "echo_orders";
             State.PendingCipherOutput = decoded;
-            State.PendingConfirm      = true;
-            State.CipherFirstTry      = true;
+            State.PendingConfirm = true;
+            State.CipherFirstTry = true;
             matched = true;
         }
         else if (State.ActiveNode == "core19" && !State.Ev5_EchoMaster && IsValidPlaintext(decoded))
         {
-            State.PendingCipherFile   = "echo_master";
+            State.PendingCipherFile = "echo_master";
             State.PendingCipherOutput = decoded;
-            State.PendingConfirm      = true;
-            State.CipherFirstTry      = true;
+            State.PendingConfirm = true;
+            State.CipherFirstTry = true;
             matched = true;
         }
 
@@ -86,7 +85,7 @@ public class PuzzleSystem : MonoBehaviour
             yield return Term.TypeLine(Term.E(">> trace +5% (bad attempt)"));
         }
     }
-
+    
     public IEnumerator Confirm()
     {
         if (!State.PendingConfirm)
@@ -153,7 +152,7 @@ public class PuzzleSystem : MonoBehaviour
         }
         State.PendingCipherFile = "";
     }
-
+    
     public IEnumerator Probe(string args)
     {
         string[] parts = args.Split(' ');
@@ -185,7 +184,7 @@ public class PuzzleSystem : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
 
         int correctPos = 0, wrongPos = 0;
-        bool[] ansUsed   = new bool[4];
+        bool[] ansUsed = new bool[4];
         bool[] guessUsed = new bool[4];
 
         for (int i = 0; i < 4; i++)
@@ -230,7 +229,7 @@ public class PuzzleSystem : MonoBehaviour
         State.Deep12BruteLockedOut = false;
         Term.Print(Term.D("// DEEP_12 lockout expired. probes reset."));
     }
-
+    
     IEnumerator AnimateDecrypt(string encoded, string decoded)
     {
         char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
@@ -247,7 +246,6 @@ public class PuzzleSystem : MonoBehaviour
             if (lines.Count > 0) { /* remove last printed line */ }
         }
 
-        // Partial reveal
         char[] final = decoded.ToCharArray();
         for (int i = 0; i < Mathf.Min(result.Length, final.Length); i++)
             result[i] = (final[i] != ' ' && Random.value > 0.5f) ? chars[Random.Range(0, chars.Length)] : final[i];
@@ -255,8 +253,7 @@ public class PuzzleSystem : MonoBehaviour
         yield return new WaitForSeconds(0.18f);
 
         Term.Print(Term.G(decoded));
-    }
-
+    }    
     static string CaesarDecrypt(string text, int shift)
     {
         var sb = new StringBuilder();

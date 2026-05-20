@@ -1,19 +1,11 @@
 using System.Collections;
 using UnityEngine;
-
-/// <summary>
-/// EndingSystem.cs — Win and loss sequences, restart logic.
-/// Completely isolated. Only touched when changing endings.
-/// </summary>
 public class EndingSystem : MonoBehaviour
 {
-    [HideInInspector] public GameState     State;
-    [HideInInspector] public Terminal      Term;
+    [HideInInspector] public GameState State;
+    [HideInInspector] public Terminal Term;
     [HideInInspector] public MissionSystem Missions;
-
-    // =================================================================
-    //  LEAK (WIN TRIGGER)
-    // =================================================================
+    
     public IEnumerator Leak()
     {
         if (State.ActiveNode != "core19")
@@ -31,7 +23,6 @@ public class EndingSystem : MonoBehaviour
         State.AcceptInput = false;
         State.GameOver    = true;
 
-        // Determine ending
         if (State.AtlasUseCount >= 3 && State.Evidence >= 4)
             yield return EndingAtlas();
         else if (State.Evidence >= 5)
@@ -39,10 +30,9 @@ public class EndingSystem : MonoBehaviour
         else
             yield return EndingPartial();
     }
-
-    // =================================================================
+    
     //  WIN ENDINGS
-    // =================================================================
+    
     IEnumerator EndingFull()
     {
         yield return Term.TypeLine(Term.W("initiating upload — all 5 evidence packages..."));
@@ -88,9 +78,9 @@ public class EndingSystem : MonoBehaviour
         yield return DrawEndCard("ATLAS TAKEOVER", "the system was broken. someone else profited.", Term.E);
     }
 
-    // =================================================================
+    
     //  LOSS ENDINGS
-    // =================================================================
+    
     public IEnumerator LossTraced()
     {
         Term.Blank();
@@ -111,11 +101,7 @@ public class EndingSystem : MonoBehaviour
         yield return Term.TypeLine(Term.E("connection lost. session unrecoverable."));
         yield return new WaitForSeconds(2f);
         yield return Restart("LOSS: BURNED", "they got there first.");
-    }
-
-    // =================================================================
-    //  RESTART
-    // =================================================================
+    }    
     IEnumerator Restart(string title, string subtitle)
     {
         yield return DrawEndCard(title, subtitle, Term.E);
@@ -132,15 +118,11 @@ public class EndingSystem : MonoBehaviour
         Term.Print(Term.NodeMap());
         Term.Blank();
 
-        // Show first mission briefing again
         yield return Missions.ShowBriefing(0);
 
         State.AcceptInput = true;
     }
 
-    // =================================================================
-    //  END CARD
-    // =================================================================
     IEnumerator DrawEndCard(string title, string subtitle, System.Func<string,string> colour)
     {
         string bar = "════════════════════════════════════";

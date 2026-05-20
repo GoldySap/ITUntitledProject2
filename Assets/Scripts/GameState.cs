@@ -1,31 +1,27 @@
-/// <summary>
-/// GameState.cs — Single source of truth for all game data.
-/// No logic. No Unity lifecycle. Just data that every module reads and writes.
-/// </summary>
 public class GameState
 {
-    // ── Stats ─────────────────────────────────────────────────────────
+    // Stats
     public float Trace   = 0f;   // 0-100, rises per action
     public float Heat    = 0f;   // 0-100, rises over time
     public int   Favours = 3;    // social currency for contacts
     public int   Evidence = 0;   // pieces gathered (max 5)
 
-    // ── Node state ────────────────────────────────────────────────────
+    // Node state
     public string ActiveNode   = "";     // currently connected node id
     public bool   Deep12Locked = true;
     public bool   Core19Locked = true;
     public bool   HasCore19Key = false;
 
-    // ── Modifier flags ────────────────────────────────────────────────
+    // Modifier flags
     public bool ProxyActive = false;  // next action costs half trace
     public bool InDarkMode  = false;  // sweeps paused, heat decaying
 
-    // ── Sweep state ───────────────────────────────────────────────────
+    // Sweep state
     public bool  SweepActive = false;
     public float SweepTimer  = 0f;
     public float HeatTimer   = 0f;
 
-    // ── Puzzle state ──────────────────────────────────────────────────
+    // Puzzle state
     public string PendingCipherFile   = "";
     public string PendingCipherOutput = "";
     public bool   PendingConfirm      = false;
@@ -33,17 +29,17 @@ public class GameState
     public int    BruteProbes         = 0;
     public bool   Deep12BruteLockedOut = false;
 
-    // ── Contact use ───────────────────────────────────────────────────
+    // Contact use
     public int AtlasUseCount = 0;
 
-    // ── Evidence flags ────────────────────────────────────────────────
+    // Evidence flags
     public bool Ev1_EchoList     = false;
     public bool Ev2_Budget       = false;
     public bool Ev3_Payload047   = false;
     public bool Ev4_EchoOrders   = false;
     public bool Ev5_EchoMaster   = false;
 
-    // ── File read flags (for analyze) ─────────────────────────────────
+    // File read flags (for analyze)
     public bool Read_MemoDraft   = false;
     public bool Read_StaffChat   = false;
     public bool Read_AccessLog   = false;
@@ -51,15 +47,15 @@ public class GameState
     public bool Read_Directive   = false;
     public bool Read_DirectorLog = false;
 
-    // ── Mission state ─────────────────────────────────────────────────
+    // Mission state
     public int  CurrentMission       = 0;  // index into MissionSystem.Missions
     public bool MissionJustCompleted = false;
 
-    // ── Game flow ─────────────────────────────────────────────────────
+    // Game flow
     public bool AcceptInput = false;
     public bool GameOver    = false;
 
-    // ── Constants ─────────────────────────────────────────────────────
+    // Constants
     public const float HEAT_TICK_INTERVAL = 18f;
     public const float HEAT_GAIN_BASE     = 2f;
     public const float SWEEP_INTERVAL_LOW = 45f;  // heat 50-75
@@ -67,7 +63,7 @@ public class GameState
     public const int   MAX_BRUTE_PROBES   = 6;
     public readonly int[] BruteAnswer     = { 5, 7, 9, 6 };
 
-    // ── Reset ─────────────────────────────────────────────────────────
+    // Reset
     public void Reset()
     {
         Trace = 0; Heat = 0; Favours = 3; Evidence = 0;

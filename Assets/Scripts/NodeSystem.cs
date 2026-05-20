@@ -1,24 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// NodeSystem.cs — Network navigation, sweeps, and passive ticks.
-/// Handles: scan, connect, disconnect, sever, ls, wait, heat tick, sweep events.
-/// </summary>
 public class NodeSystem : MonoBehaviour
 {
     [HideInInspector] public GameState State;
-    [HideInInspector] public Terminal  Term;
+    [HideInInspector] public Terminal Term;
     [HideInInspector] public EndingSystem Endings;
-
-    // =================================================================
-    //  PASSIVE UPDATE — called from HackerTerminal.Update()
-    // =================================================================
+    [HideInInspector] public VisualEffects VFX;
+    
     public void Tick()
     {
         if (State.GameOver || !State.AcceptInput) return;
 
-        // Heat tick
         State.HeatTimer += Time.deltaTime;
         if (State.HeatTimer >= GameState.HEAT_TICK_INTERVAL)
         {
@@ -35,7 +28,6 @@ public class NodeSystem : MonoBehaviour
             }
         }
 
-        // Sweep scheduling
         if (!State.SweepActive && State.ActiveNode.Length > 0 && State.Heat > 50f && !State.InDarkMode)
         {
             State.SweepTimer += Time.deltaTime;
@@ -51,10 +43,7 @@ public class NodeSystem : MonoBehaviour
 
         CheckLoss();
     }
-
-    // =================================================================
-    //  SWEEP EVENT
-    // =================================================================
+    
     IEnumerator RunSweep()
     {
         State.SweepActive = true;
@@ -63,12 +52,18 @@ public class NodeSystem : MonoBehaviour
         Term.Print(Term.E($"!! AGENT SWEEP — {node.ToUpper()} — type [sever] in 8 seconds"));
 
         float countdown = 8f;
+        float total = 8f;
         while (countdown > 0f && State.SweepActive)
         {
             yield return new WaitForSeconds(1f);
             countdown -= 1f;
             if (State.SweepActive && countdown > 0)
-                Term.Print(Term.D($"   {countdown:0}..."));
+            {
+                string bar = VFX != null
+                    ? VFX.SweepBar(countdown, total)
+                    : Term.E($"!! SWEEP — {countdown:0}s remaining");
+                Term.Print(bar);
+            }
         }
 
         if (State.SweepActive)
@@ -84,9 +79,7 @@ public class NodeSystem : MonoBehaviour
         }
     }
 
-    // =================================================================
-    //  COMMANDS
-    // =================================================================
+        
     public IEnumerator Scan()
     {
         yield return Term.TypeLine(Term.D("scanning network..."));
@@ -217,10 +210,7 @@ public class NodeSystem : MonoBehaviour
         yield return Term.TypeLine(Term.G(">> trace decayed ~9%."));
         Term.Print(Term.TraceBar());
     }
-
-    // =================================================================
-    //  HELPERS
-    // =================================================================
+    
     public void AddTrace(float amount)
     {
         float actual = State.ProxyActive ? amount * 0.5f : amount;
@@ -231,7 +221,7 @@ public class NodeSystem : MonoBehaviour
     }
 
     public void ReduceTrace(float v) { State.Trace = Mathf.Max(0, State.Trace - v); Term.UpdateStatusBar(); }
-    public void ReduceHeat(float v)  { State.Heat  = Mathf.Max(0, State.Heat  - v); Term.UpdateStatusBar(); }
+    public void ReduceHeat(float v) { State.Heat  = Mathf.Max(0, State.Heat  - v); Term.UpdateStatusBar(); }
 
     void CheckLoss()
     {

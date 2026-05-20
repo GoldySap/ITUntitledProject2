@@ -1,19 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// MissionSystem.cs — Missions as data objects.
-/// Each mission has objectives, completion checks, and rewards.
-/// Adding a new mission = new entry in the Missions array only.
-/// </summary>
 public class MissionSystem : MonoBehaviour
 {
     [HideInInspector] public GameState State;
     [HideInInspector] public Terminal  Term;
-
-    // =================================================================
-    //  MISSION DATA
-    // =================================================================
+    
     public struct Objective
     {
         public string Description;
@@ -22,11 +14,11 @@ public class MissionSystem : MonoBehaviour
 
     public struct Mission
     {
-        public string     Title;
-        public string     Briefing;
+        public string Title;
+        public string Briefing;
         public Objective[] Objectives;
-        public int        FavourReward;
-        public string     CompletionMessage;
+        public int FavourReward;
+        public string CompletionMessage;
     }
 
     public static Mission[] Missions;
@@ -35,7 +27,7 @@ public class MissionSystem : MonoBehaviour
     {
         Missions = new Mission[]
         {
-            // ── MISSION 0: First Contact ──────────────────────────────
+            // MISSION 1: First Contact
             new Mission
             {
                 Title    = "M1: FIRST CONTACT",
@@ -54,7 +46,7 @@ public class MissionSystem : MonoBehaviour
                 CompletionMessage = "GHOST: good start. you know what ECHO is now. dig deeper.",
             },
 
-            // ── MISSION 1: Follow the Money ───────────────────────────
+            // MISSION 2: Follow the Money
             new Mission
             {
                 Title    = "M2: FOLLOW THE MONEY",
@@ -73,7 +65,7 @@ public class MissionSystem : MonoBehaviour
                 CompletionMessage = "MAVEN: now we're talking. the orders are real. get deeper in.",
             },
 
-            // ── MISSION 2: Break the Gate ─────────────────────────────
+            // MISSION 3: Break the Gate
             new Mission
             {
                 Title    = "M3: BREAK THE GATE",
@@ -92,7 +84,7 @@ public class MissionSystem : MonoBehaviour
                 CompletionMessage = "GHOST: four pieces. one more and we have everything. push to the core.",
             },
 
-            // ── MISSION 3: The Director ───────────────────────────────
+            // MISSION 4: The Director
             new Mission
             {
                 Title    = "M4: THE DIRECTOR",
@@ -113,10 +105,7 @@ public class MissionSystem : MonoBehaviour
             },
         };
     }
-
-    // =================================================================
-    //  CHECK OBJECTIVES — called by CommandRouter after every command
-    // =================================================================
+    
     public void CheckObjectives()
     {
         if (State.CurrentMission >= Missions.Length) return;
@@ -156,9 +145,9 @@ public class MissionSystem : MonoBehaviour
         }
     }
 
-    // =================================================================
+    
     //  SHOW MISSIONS — "missions" command
-    // =================================================================
+    
     public IEnumerator ShowAll()
     {
         yield return Term.TypeLine(Term.I("-- missions --"));

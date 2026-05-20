@@ -1,19 +1,12 @@
 using System.Collections;
 using UnityEngine;
-
-/// <summary>
-/// ContactSystem.cs — Ghost, Maven, Atlas dialogue and effects.
-/// Adding a new contact or action = new case here only.
-/// </summary>
 public class ContactSystem : MonoBehaviour
 {
     [HideInInspector] public GameState  State;
     [HideInInspector] public Terminal   Term;
-    [HideInInspector] public NodeSystem Nodes;
-
-    // =================================================================
-    //  SHOW ALL CONTACTS
-    // =================================================================
+    [HideInInspector] public NodeSystem  Nodes;
+    [HideInInspector] public WorldEvents Events;
+    
     public IEnumerator ShowAll()
     {
         yield return Term.TypeLine(Term.I("-- contacts --"));
@@ -33,10 +26,7 @@ public class ContactSystem : MonoBehaviour
         yield return Term.TypeLine(Term.D("  call atlas extract  ") + Term.C("emergency heat & trace reduction"));
         yield return Term.TypeLine(Term.W("warning: 3+ ATLAS calls changes your ending."));
     }
-
-    // =================================================================
-    //  CALL ROUTER
-    // =================================================================
+    
     public IEnumerator Call(string contact, string action)
     {
         int cost = contact == "atlas" ? 2 : 1;
@@ -56,15 +46,14 @@ public class ContactSystem : MonoBehaviour
                 break;
         }
     }
-
-    // =================================================================
-    //  GHOST
-    // =================================================================
+    
     IEnumerator Ghost(string action)
     {
         State.Favours--;
         yield return Term.TypeLine(Term.G("GHOST: ") + Term.D("..."));
         yield return new WaitForSeconds(0.4f);
+        string ghostReact = Events?.GhostReaction() ?? "";
+        if (ghostReact.Length > 0) yield return Term.TypeLine(Term.D(ghostReact));
 
         switch (action)
         {
@@ -114,15 +103,14 @@ public class ContactSystem : MonoBehaviour
         Term.UpdateStatusBar();
         yield return Term.TypeLine(Term.G("GHOST: ") + Term.C("back online. be careful."));
     }
-
-    // =================================================================
-    //  MAVEN
-    // =================================================================
+    
     IEnumerator Maven(string action)
     {
         State.Favours--;
         yield return Term.TypeLine(Term.W("MAVEN: ") + Term.D("..."));
         yield return new WaitForSeconds(0.5f);
+        string mavenReact = Events?.MavenReaction() ?? "";
+        if (mavenReact.Length > 0) yield return Term.TypeLine(Term.D(mavenReact));
 
         switch (action)
         {
@@ -170,10 +158,7 @@ public class ContactSystem : MonoBehaviour
                 break;
         }
     }
-
-    // =================================================================
-    //  ATLAS
-    // =================================================================
+    
     IEnumerator Atlas(string action)
     {
         State.Favours -= 2;

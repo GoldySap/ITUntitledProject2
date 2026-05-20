@@ -98,14 +98,14 @@ public class BootSequence : MonoBehaviour
             if (p.Length >= 3) yield return Settings.ApplySetting(p[1], p[2]);
             else yield return Term.TypeLine(Term.E("usage: set [setting] [value]"));
         }
-        else if (cmd == "credits")  { yield return ShowCredits(); }
-        else if (cmd == "quit")     { QuitGame(); }
+        else if (cmd == "credits") { yield return ShowCredits(); }
+        else if (cmd == "quit") { QuitGame(); }
         else if (cmd == "help")
         {
             Term.Blank();
             ShowMenuPrompt();
         }
-        else if (cmd == "clear")    { Term.ClearScreen(); ShowMenuPrompt(); }
+        else if (cmd == "clear") { Term.ClearScreen(); ShowMenuPrompt(); }
         else
         {
             yield return Term.TypeLine(Term.E($"command not found: {cmd}"));
@@ -206,8 +206,8 @@ public class BootSequence : MonoBehaviour
     {
         yield return Term.TypeLine(Term.I("-- CREDITS --"), 0.015f);
         Term.Blank();
-        yield return Term.TypeLine(Term.C("game design, code, writing"), 0.015f);
-        yield return Term.TypeLine(Term.G("  you"), 0.015f);
+        yield return Term.TypeLine(Term.C("Game designed, Coded, Written"), 0.015f);
+        yield return Term.TypeLine(Term.G("By Alexander"), 0.015f);
         Term.Blank();
         yield return Term.TypeLine(Term.C("built with Unity + TextMeshPro"), 0.015f);
         Term.Blank();

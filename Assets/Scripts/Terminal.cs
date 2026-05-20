@@ -19,11 +19,11 @@ public class Terminal : MonoBehaviour
     private readonly List<string> outputLines = new List<string>();
     private const int MAX_LINES = 22;
     private int scrollOffset = 0;
-    private const int SCROLL_STEP = 4;
+    private const int SCROLL_STEP = 1;
 
     private readonly StringBuilder inputBuffer = new StringBuilder();
     private readonly List<string>  inputHistory = new List<string>();
-    private int   historyIndex = -1;
+    private int historyIndex = -1;
     private float caretTimer = 0f;
     private bool  caretVisible = true;
 
@@ -147,24 +147,53 @@ public class Terminal : MonoBehaviour
         }
     }
 
+    private float nextScrollTime = 0f;
+    private float holdDelay = 0.5f;
+    private float continuousScrollRate = 0.1f;
+
     void HandleScrollKeys()
     {
         var kb = Keyboard.current;
         if (kb == null) return;
 
+
         bool shift = kb.shiftKey.isPressed || kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
-        float scroll = Input.mouseScrollDelta.y;
-        if (kb.pageUpKey.wasPressedThisFrame || (shift && kb.upArrowKey.wasPressedThisFrame) || scroll > 0f)
+        float scroll = Mouse.current.scroll.ReadValue().y;
+
+        bool isInputPressedUp = kb.pageUpKey.wasPressedThisFrame || (shift && kb.upArrowKey.wasPressedThisFrame); 
+        bool isInputHeldUp = kb.pageUpKey.isPressed || (shift && kb.upArrowKey.isPressed);
+
+        bool isInputPressedDown = kb.pageDownKey.wasPressedThisFrame || (shift && kb.downArrowKey.wasPressedThisFrame);
+        bool isInputHeldDown = kb.pageDownKey.isPressed || (shift && kb.downArrowKey.isPressed);
+
+        if (isInputPressedUp)
         {
             int maxScroll = Mathf.Max(0, outputLines.Count - MAX_LINES);
-            scrollOffset  = Mathf.Min(scrollOffset + SCROLL_STEP, maxScroll);
+            scrollOffset = Mathf.Min(scrollOffset + SCROLL_STEP, maxScroll);
             Redraw();
+            nextScrollTime = Time.time + holdDelay;
         }
         
-        else if (kb.pageDownKey.wasPressedThisFrame || (shift && kb.downArrowKey.wasPressedThisFrame) || scroll < 0f)
+        if (isInputHeldUp && Time.time >= nextScrollTime || scroll > 0f && Time.time >= nextScrollTime)
+        {
+            int maxScroll = Mathf.Max(0, outputLines.Count - MAX_LINES);
+            scrollOffset = Mathf.Min(scrollOffset + SCROLL_STEP, maxScroll);
+            Redraw();
+            nextScrollTime = Time.time + continuousScrollRate;
+        }
+
+        if (isInputPressedDown)
         {
             scrollOffset = Mathf.Max(0, scrollOffset - SCROLL_STEP);
             Redraw();
+            nextScrollTime = Time.time + holdDelay;
+        }
+        
+        if (isInputHeldDown && Time.time >= nextScrollTime || scroll < 0f && Time.time >= nextScrollTime)
+        {
+            scrollOffset = Mathf.Max(0, scrollOffset - SCROLL_STEP);
+            Redraw();
+            nextScrollTime = Time.time + continuousScrollRate;
         }
         
         else if (kb.homeKey.wasPressedThisFrame)

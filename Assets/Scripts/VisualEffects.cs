@@ -8,9 +8,16 @@ public class VisualEffects : MonoBehaviour
     [HideInInspector] public SettingsSystem Settings;
 
     private CanvasGroup canvasGroup;
-    private Image scanlineOverlay;
     private Canvas mainCanvas;
 
+    private Image scanlineOverlay;
+    // public MonoBehaviour scanlineOverlay; 
+    public Image flickerOverlay;
+
+    public float flickerSpeed = 0.05f;
+
+    private Coroutine flickerCoroutine;
+    private bool isFlickeringActive = false;
     private Color colSafe = new Color(0.85f, 1f, 0.85f); // cool green tint
     private Color colWarn = new Color(1f, 0.92f, 0.75f); // warm amber
     private Color colDanger = new Color(1f, 0.80f, 0.80f); // red
@@ -65,9 +72,45 @@ public class VisualEffects : MonoBehaviour
 
     public void ApplySettings(bool scanlines, bool flicker)
     {
+        // Toggle Scanlines
         if (scanlineOverlay != null)
+        {
             scanlineOverlay.enabled = scanlines;
+        }
+
+        // Toggle Flicker
+        isFlickeringActive = flicker;
+        if (isFlickeringActive)
+        {
+            if (flickerCoroutine == null)
+            {
+                flickerCoroutine = StartCoroutine(FlickerRoutine());
+            }
+        }
+        else
+        {
+            if (flickerCoroutine != null)
+            {
+                StopCoroutine(flickerCoroutine);
+                flickerCoroutine = null;
+                if (flickerOverlay != null) flickerOverlay.enabled = false;
+            }
+        }
     }
+
+    private IEnumerator FlickerRoutine()
+    {
+        while (isFlickeringActive)
+        {
+            if (flickerOverlay != null)
+            {
+                // Randomly toggle the overlay on and off to create a flicker
+                flickerOverlay.enabled = Random.value > 0.5f;
+            }
+            yield return new WaitForSeconds(flickerSpeed);
+        }
+    }
+
     
     void Update()
     {

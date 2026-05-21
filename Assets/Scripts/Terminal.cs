@@ -17,7 +17,7 @@ public class Terminal : MonoBehaviour
     public  Canvas MainCanvas { get; private set; }
 
     private readonly List<string> outputLines = new List<string>();
-    private const int MAX_LINES = 22;
+    private const int MAX_LINES = 32;
     private int scrollOffset = 0;
     private const int SCROLL_STEP = 1;
 

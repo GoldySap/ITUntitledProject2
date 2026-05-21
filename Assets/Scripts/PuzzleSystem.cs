@@ -214,10 +214,10 @@ public class PuzzleSystem : MonoBehaviour
             yield return Term.TypeLine(Term.D($"probes remaining: {rem}"));
             if (rem <= 0)
             {
-                Nodes.AddTrace(20f);
                 State.BruteProbes = 0;
                 State.Deep12BruteLockedOut = true;
                 yield return Term.TypeLine(Term.E("!! probe limit reached. DEEP_12 locked out for 60 seconds. trace +20%"));
+                Nodes.AddTrace(20f);
                 StartCoroutine(LockoutTimer());
             }
         }

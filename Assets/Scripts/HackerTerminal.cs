@@ -134,12 +134,14 @@ public class HackerTerminal : MonoBehaviour
             term.D("contacts: ") +
             term.G("GHOST") + term.D("  ") +
             term.W("MAVEN") + term.D("  ") +
-            term.E("ATLAS"));
+            term.E("ATLAS")
+            );
         yield return term.TypeLine(
             term.D("starting favours: ") + term.I("3") +
             term.D("  |  type ") + term.C("help") +
             term.D(" or ") + term.C("missions") +
-            term.D(" to begin."));
+            term.D(" to begin.")
+            );
         term.Blank();
 
         yield return missions.ShowBriefing(0);

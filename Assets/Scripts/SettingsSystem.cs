@@ -9,9 +9,9 @@ public class SettingsSystem : MonoBehaviour
     private const string KEY_SCANLINES = "scanlines";
     private const string KEY_FLICKER = "flicker";
 
-    public float TypeDelay  { get; private set; } = 0.018f;
-    public bool  Scanlines  { get; private set; } = true;
-    public bool  Flicker    { get; private set; } = true;
+    public float TypeDelay { get; private set; } = 0.018f;
+    public bool Scanlines { get; private set; } = true;
+    public bool Flicker { get; private set; } = true;
 
     public static readonly float[] SpeedPresets = { 0.04f, 0.018f, 0.008f, 0f };
     public static readonly string[] SpeedNames  = { "slow", "normal", "fast", "instant" };
@@ -23,16 +23,16 @@ public class SettingsSystem : MonoBehaviour
     {
         speedIndex = PlayerPrefs.GetInt(KEY_TEXTSPEED, 1);
         speedIndex = Mathf.Clamp(speedIndex, 0, SpeedPresets.Length - 1);
-        TypeDelay  = SpeedPresets[speedIndex];
-        Scanlines  = PlayerPrefs.GetInt(KEY_SCANLINES, 1) == 1;
-        Flicker    = PlayerPrefs.GetInt(KEY_FLICKER,   1) == 1;
+        TypeDelay = SpeedPresets[speedIndex];
+        Scanlines = PlayerPrefs.GetInt(KEY_SCANLINES, 1) == 1;
+        Flicker = PlayerPrefs.GetInt(KEY_FLICKER, 1) == 1;
     }
 
     void Save()
     {
         PlayerPrefs.SetInt(KEY_TEXTSPEED, speedIndex);
         PlayerPrefs.SetInt(KEY_SCANLINES, Scanlines ? 1 : 0);
-        PlayerPrefs.SetInt(KEY_FLICKER,   Flicker   ? 1 : 0);
+        PlayerPrefs.SetInt(KEY_FLICKER, Flicker ? 1 : 0);
         PlayerPrefs.Save();
     }
     

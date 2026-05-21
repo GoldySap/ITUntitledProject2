@@ -73,7 +73,7 @@ public class ContactSystem : MonoBehaviour
             case "dark":
                 if (State.ActiveNode.Length > 0)
                 {
-                    State.Favours++; // refund
+                    State.Favours++;
                     yield return Term.TypeLine(Term.G("GHOST: ") + Term.W("disconnect from the node first."));
                     yield break;
                 }

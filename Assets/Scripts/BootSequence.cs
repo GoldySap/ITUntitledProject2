@@ -62,13 +62,13 @@ public class BootSequence : MonoBehaviour
         yield return Term.TypeLine(Term.D("// no active connection"), 0.025f);
         yield return Term.TypeLine(Term.D("// type [help] for available commands"), 0.025f);
         Term.Blank();
-        yield return Term.TypeLine(Term.E(" _  _ ___ _  _ _   _  ___"), 0.01f);
-        yield return Term.TypeLine(Term.E("| \\| | __| \\/ | | | / __|"), 0.01f);
-        yield return Term.TypeLine(Term.E("|     | _|  > < | |_| \\__ \\"), 0.01f);
-        yield return Term.TypeLine(Term.E("|_|\\_|___/_/\\_|\\___/|___/"), 0.01f);
+        yield return Term.TypeLine(Term.E(@" _   _ ___ _   _ _   _ ___"), 0.01f);
+        yield return Term.TypeLine(Term.E(@"| \\| | __| \_/ | | | / __|"), 0.01f);
+        yield return Term.TypeLine(Term.E(@"|     | _|  >_< | |_| \__ \"), 0.01f);
+        yield return Term.TypeLine(Term.E(@"|_|\\_|___|_/ \_|\___/|___/"), 0.01f);
         Term.Blank();
     }
-    
+
     void ShowMenuPrompt()
     {
         Term.Print(Term.C("  start       ") + Term.D("establish connection and begin"));

@@ -2,8 +2,8 @@ using System.Collections;
 using UnityEngine;
 public class ContactSystem : MonoBehaviour
 {
-    [HideInInspector] public GameState  State;
-    [HideInInspector] public Terminal   Term;
+    [HideInInspector] public GameState State;
+    [HideInInspector] public Terminal Term;
     [HideInInspector] public NodeSystem  Nodes;
     [HideInInspector] public WorldEvents Events;
     
@@ -11,20 +11,19 @@ public class ContactSystem : MonoBehaviour
     {
         yield return Term.TypeLine(Term.I("-- contacts --"));
         yield return Term.TypeLine(Term.G("GHOST") + Term.D(" [1 favour]  the fixer."));
-        yield return Term.TypeLine(Term.D("  call ghost spoof    ") + Term.C("wipe 30% trace"));
-        yield return Term.TypeLine(Term.D("  call ghost reroute  ") + Term.C("halve trace cost on next action"));
-        yield return Term.TypeLine(Term.D("  call ghost dark     ") + Term.C("go silent — sweeps paused, heat decays"));
+        yield return Term.TypeLine(Term.L("  call ghost spoof    ") + Term.C("wipe 30% trace"));
+        yield return Term.TypeLine(Term.L("  call ghost reroute  ") + Term.C("halve trace cost on next action"));
+        yield return Term.TypeLine(Term.L("  call ghost dark     ") + Term.C("go silent — sweeps paused, heat decays"));
         Term.Blank();
         yield return Term.TypeLine(Term.W("MAVEN") + Term.D(" [1 favour]  the informant."));
-        yield return Term.TypeLine(Term.D("  call maven scan     ") + Term.C("recon all nodes, zero trace"));
-        yield return Term.TypeLine(Term.D("  call maven hint     ") + Term.C("get a puzzle hint (cipher or bruteforce)"));
-        yield return Term.TypeLine(Term.D("  call maven warn     ") + Term.C("check true heat level"));
+        yield return Term.TypeLine(Term.L("  call maven scan     ") + Term.C("recon all nodes, zero trace"));
+        yield return Term.TypeLine(Term.L("  call maven hint     ") + Term.C("get a puzzle hint (cipher or bruteforce)"));
+        yield return Term.TypeLine(Term.L("  call maven warn     ") + Term.C("check true heat level"));
         Term.Blank();
         yield return Term.TypeLine(Term.E("ATLAS") + Term.D(" [2 favours]  the backer. use carefully."));
-        yield return Term.TypeLine(Term.D("  call atlas publish  ") + Term.C("partial leak — buys time, not a win"));
-        yield return Term.TypeLine(Term.D("  call atlas funds    ") + Term.C("emergency +2 favours"));
-        yield return Term.TypeLine(Term.D("  call atlas extract  ") + Term.C("emergency heat & trace reduction"));
-        yield return Term.TypeLine(Term.W("warning: 3+ ATLAS calls changes your ending."));
+        yield return Term.TypeLine(Term.L("  call atlas publish  ") + Term.C("partial leak — buys time, not a win"));
+        yield return Term.TypeLine(Term.L("  call atlas funds    ") + Term.C("emergency +2 favours"));
+        yield return Term.TypeLine(Term.L("  call atlas extract  ") + Term.C("emergency heat & trace reduction"));
     }
     
     public IEnumerator Call(string contact, string action)

@@ -57,11 +57,11 @@ public class GameState
 
     // Constants
     public const float HEAT_TICK_INTERVAL = 18f;
-    public const float HEAT_GAIN_BASE     = 2f;
+    public const float HEAT_GAIN_BASE = 2f;
     public const float SWEEP_INTERVAL_LOW = 45f;  // heat 50-75
     public const float SWEEP_INTERVAL_HIGH= 25f;  // heat 75+
-    public const int   MAX_BRUTE_PROBES   = 6;
-    public readonly int[] BruteAnswer     = { 5, 7, 9, 6 };
+    public const int MAX_BRUTE_PROBES = 6;
+    public readonly int[] BruteAnswer = { 5, 7, 9, 6 };
 
     // Reset
     public void Reset()

@@ -17,7 +17,7 @@ public class Terminal : MonoBehaviour
     public  Canvas MainCanvas { get; private set; }
 
     private readonly List<string> outputLines = new List<string>();
-    private const int MAX_LINES = 32;
+    private const int MAX_LINES = 42;
     private int scrollOffset = 0;
     private const int SCROLL_STEP = 1;
 
@@ -27,12 +27,13 @@ public class Terminal : MonoBehaviour
     private float caretTimer = 0f;
     private bool  caretVisible = true;
 
-    public string G(string s) => $"<color=#7EC850>{s}</color>";
-    public string D(string s) => $"<color=#3A3A3A>{s}</color>";
-    public string W(string s) => $"<color=#D4903A>{s}</color>";
-    public string E(string s) => $"<color=#C0392B>{s}</color>";
-    public string I(string s) => $"<color=#4A9ECA>{s}</color>";
-    public string C(string s) => $"<color=#CCCCCC>{s}</color>";
+    public string G(string s) => $"<color=#7EC850>{s}</color>"; // green
+    public string D(string s) => $"<color=#3A3A3A>{s}</color>"; // dark gray
+    public string L(string s) => $"<color=#999999>{s}</color>"; // gray
+    public string C(string s) => $"<color=#CCCCCC>{s}</color>"; // light gray
+    public string W(string s) => $"<color=#D4903A>{s}</color>"; // yellow
+    public string E(string s) => $"<color=#C0392B>{s}</color>"; // red
+    public string I(string s) => $"<color=#4A9ECA>{s}</color>"; // blue
     
     public void BuildUI()
     {
@@ -62,9 +63,9 @@ public class Terminal : MonoBehaviour
         var sGO = new GameObject("StatusBar");
         sGO.transform.SetParent(canvasGO.transform, false);
         statusBar = sGO.AddComponent<TextMeshProUGUI>();
-        statusBar.fontSize         = 12;
-        statusBar.richText         = true;
-        statusBar.alignment        = TextAlignmentOptions.TopLeft;
+        statusBar.fontSize = 12;
+        statusBar.richText = true;
+        statusBar.alignment = TextAlignmentOptions.TopLeft;
         statusBar.textWrappingMode = TextWrappingModes.NoWrap;
         var sRT = sGO.GetComponent<RectTransform>();
         sRT.anchorMin = new Vector2(0,1); sRT.anchorMax = new Vector2(1,1);
@@ -85,11 +86,11 @@ public class Terminal : MonoBehaviour
         var tGO = new GameObject("ScreenText");
         tGO.transform.SetParent(canvasGO.transform, false);
         screenText = tGO.AddComponent<TextMeshProUGUI>();
-        screenText.fontSize         = 14;
-        screenText.richText         = true;
+        screenText.fontSize = 14;
+        screenText.richText = true;
         screenText.textWrappingMode = TextWrappingModes.Normal;
-        screenText.alignment        = TextAlignmentOptions.TopLeft;
-        screenText.overflowMode     = TextOverflowModes.Truncate;
+        screenText.alignment = TextAlignmentOptions.TopLeft;
+        screenText.overflowMode = TextOverflowModes.Truncate;
         var tRT = tGO.GetComponent<RectTransform>();
         tRT.anchorMin = Vector2.zero; tRT.anchorMax = Vector2.one;
         tRT.offsetMin = new Vector2(20,16); tRT.offsetMax = new Vector2(-20,-34);
@@ -155,7 +156,6 @@ public class Terminal : MonoBehaviour
     {
         var kb = Keyboard.current;
         if (kb == null) return;
-
 
         bool shift = kb.shiftKey.isPressed || kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
         float scroll = Mouse.current.scroll.ReadValue().y;
